@@ -1,8 +1,10 @@
 package com.tul.shoppingcart.demo.model
 
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Enumerated
+import javax.persistence.EnumType
 
-@Entity(name = "ProductModel")
+@Entity
 class ProductModel(
     @Enumerated(EnumType.STRING)
     var status: ProductStatus = ProductStatus.ACTIVE,

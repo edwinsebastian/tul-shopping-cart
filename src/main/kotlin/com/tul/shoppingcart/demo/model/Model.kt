@@ -1,11 +1,11 @@
 package com.tul.shoppingcart.demo.model
 
-import java.util.*
-import javax.persistence.Entity
+import java.util.UUID
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.MappedSuperclass
 
-@Entity
+@MappedSuperclass
 abstract class Model {
     @Id
     @GeneratedValue

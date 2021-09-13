@@ -4,7 +4,7 @@ import com.tul.shoppingcart.demo.model.Model
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 
-interface IServiceCrud<T> {
+interface ICrudService<T> {
     var crudRepository: CrudRepository<T, UUID>
 
     fun getEntities() = crudRepository.findAll().toList()
@@ -18,6 +18,7 @@ interface IServiceCrud<T> {
             throw NoSuchElementException()
         }
         (model as Model).id = id
+
         return crudRepository.save(model as T)
     }
 
