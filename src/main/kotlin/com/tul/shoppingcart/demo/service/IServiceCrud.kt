@@ -1,12 +1,25 @@
 package com.tul.shoppingcart.demo.service
 
-import com.tul.shoppingcart.demo.model.ProductModel
+import com.tul.shoppingcart.demo.model.Model
+import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface IServiceCrud<T> {
-    fun getEntities(): List<T>
-    fun getEntity(id: UUID): T
-    fun createEntity(model: T): UUID
-    fun updateEntity(id: UUID, model: T): UUID
-    fun deleteEntity(id: UUID)
+    var crudRepository: CrudRepository<T, UUID>
+
+    fun getEntities() = crudRepository.findAll().toList()
+
+    fun getEntity(id: UUID) = crudRepository.findById(id).get()
+
+    fun createEntity(model: T) = crudRepository.save(model)
+
+    fun updateEntity(id: UUID, model: T): T{
+        if(!crudRepository.existsById(id)){
+            throw NoSuchElementException()
+        }
+        (model as Model).id = id
+        return crudRepository.save(model as T)
+    }
+
+    fun deleteEntity(id: UUID) = crudRepository.deleteById(id)
 }

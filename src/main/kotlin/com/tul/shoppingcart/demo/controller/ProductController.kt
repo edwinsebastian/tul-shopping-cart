@@ -8,9 +8,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("v1/products")
-class ProductController(
-    private val iServiceCrud: IServiceCrud<ProductModel>
-) {
+class ProductController(private val iServiceCrud: IServiceCrud<ProductModel>) {
 
     @GetMapping("")
     fun getActiveProducts(): ResponseEntity<List<ProductModel>> {
@@ -24,12 +22,12 @@ class ProductController(
 
     @PostMapping("")
     fun createProduct(@RequestBody productModel: ProductModel): ResponseEntity<UUID> {
-        return ResponseEntity.ok(iServiceCrud.createEntity(productModel))
+        return ResponseEntity.ok(iServiceCrud.createEntity(productModel).id)
     }
 
     @PutMapping("/{id}")
     fun updateProduct(@PathVariable id: UUID, @RequestBody productModel: ProductModel): ResponseEntity<UUID>{
-        return ResponseEntity.ok(iServiceCrud.updateEntity(id, productModel))
+        return ResponseEntity.ok(iServiceCrud.updateEntity(id, productModel).id)
     }
 
     @DeleteMapping("/{id}")
