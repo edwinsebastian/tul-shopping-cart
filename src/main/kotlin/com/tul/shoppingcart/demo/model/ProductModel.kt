@@ -1,13 +1,11 @@
 package com.tul.shoppingcart.demo.model
 
-import java.util.*
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Enumerated
+import javax.persistence.EnumType
 
 @Entity
 class ProductModel(
-    @Id
-    @GeneratedValue
-    var id: UUID = UUID.randomUUID(),
     @Enumerated(EnumType.STRING)
     var status: ProductStatus = ProductStatus.ACTIVE,
     val name: String = "",
@@ -15,16 +13,15 @@ class ProductModel(
     val description: String = "",
     val price: Double = 0.0,
     val discount: Boolean = false,
-    val availableQuantity: Int = 0,
-    val pendingQuantity: Int = 0,
-    val finishedQuantity: Int = 0,
-){
+    var availableQuantity: Int = 0,
+    var pendingQuantity: Int = 0,
+    var completedQuantity: Int = 0
+): Model() {
     val finalPrice
         get() = if (this.discount) this.price/2 else this.price
-
 }
 
-enum class ProductStatus(val state: String){
+enum class ProductStatus(val status: String){
     ACTIVE("ACTIVE"),
     DELETED("DELETED")
 }
