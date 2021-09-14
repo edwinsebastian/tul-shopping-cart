@@ -3,6 +3,7 @@ package com.tul.shoppingcart.demo.model
 import javax.persistence.Entity
 import javax.persistence.Enumerated
 import javax.persistence.EnumType
+import javax.persistence.OneToMany
 
 @Entity
 class ProductModel(
@@ -15,7 +16,10 @@ class ProductModel(
     val discount: Boolean = false,
     var availableQuantity: Int = 0,
     var pendingQuantity: Int = 0,
-    var completedQuantity: Int = 0
+    var completedQuantity: Int = 0,
+    @OneToMany(mappedBy = "productModel")
+    var shoppingCartProductsModel: MutableSet<ShoppingCartProductsModel> = mutableSetOf(),
+
 ): Model() {
     val finalPrice
         get() = if (this.discount) this.price/2 else this.price

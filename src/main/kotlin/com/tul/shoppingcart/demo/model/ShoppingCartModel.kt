@@ -1,11 +1,14 @@
 package com.tul.shoppingcart.demo.model
 
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.OneToMany
+import javax.persistence.Enumerated
+import javax.persistence.EnumType
 
 @Entity
 class ShoppingCartModel(
-    @ManyToMany
-    var products: MutableList<ProductModel> = mutableListOf(),
+    @OneToMany(mappedBy = "shoppingCartModel")
+    var shoppingCartProductsModel: MutableSet<ShoppingCartProductsModel> = mutableSetOf(),
     @Enumerated(EnumType.STRING)
     var status: ShoppingCartStatus = ShoppingCartStatus.PENDING,
     var totalCost: Double = 0.0
