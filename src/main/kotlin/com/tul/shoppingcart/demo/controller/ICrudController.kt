@@ -4,23 +4,17 @@ import com.tul.shoppingcart.demo.service.ICrudService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-interface ICrudController<T, ID> {
+interface ICrudController<T, ID, R> {
     var iCrudService: ICrudService<T, ID>
 
     @PostMapping
-    fun createResource(@RequestBody model: T): ResponseEntity<T>{
-        return ResponseEntity.ok(iCrudService.createEntity(model))
-    }
+    fun createResource(@RequestBody model: T): ResponseEntity<R>
 
     @GetMapping("/{id}")
-    fun readResource(@PathVariable id: ID): ResponseEntity<T> {
-        return ResponseEntity.ok(iCrudService.getEntity(id))
-    }
+    fun readResource(@PathVariable id: ID): ResponseEntity<R>
 
     @GetMapping
-    fun readResources(): ResponseEntity<List<T>> {
-        return ResponseEntity.ok(iCrudService.getEntities())
-    }
+    fun readResources(): ResponseEntity<List<R>>
 
     @PutMapping("/{id}")
     fun updateProduct(@PathVariable id: ID, @RequestBody model: T): ResponseEntity<ID>

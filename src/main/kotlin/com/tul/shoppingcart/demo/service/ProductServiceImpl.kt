@@ -56,24 +56,28 @@ class ProductServiceImpl(
         return crudRepository.save(productModel)
     }
 
-    fun moveStockPendingToCompleted(shoppingCartDTO: ShoppingCartDTO){
-        val products: MutableList<Map<UUID, Int>> = shoppingCartDTO.products
-            .parallelStream()
-            .map { mapOf(it.productId to it.quantity) }
-            .collect(Collectors.toList())
+    fun moveStockPendingToCompleted(shoppingCartDTO: ShoppingCartDTO): MutableIterable<ProductModel> {
+        val productsQuantity: Map<UUID, Int> =
+            shoppingCartDTO.products
+                .map { it.productId to it.quantity }
+                .toMap()
 
-        val productModel: List<ProductModel> = crudRepository.findAllById(
+        val productModelList: List<ProductModel> = crudRepository.findAllById(
             shoppingCartDTO.products
                 .parallelStream()
-                .map { it.productId}
+                .map { it.productId }
                 .collect(Collectors.toList())
             .asIterable()
         ).toList()
 
+        productModelList
+            .parallelStream()
+            .forEach {
+                val quantity: Int = productsQuantity.getOrDefault(it.id, 0)
+                it.pendingQuantity -= quantity
+                it.completedQuantity += quantity
+            }
 
-
-//        productModel.pendingQuantity -= quantity
-//        productModel.completedQuantity += quantity
-//        crudRepository.save(productModel)
+        return crudRepository.saveAll(productModelList)
     }
 }

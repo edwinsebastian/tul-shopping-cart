@@ -12,7 +12,19 @@ import java.util.UUID
 class ShoppingCartController(
     private val iShoppingCartService: IShoppingCartService<ShoppingCartProductsModel, ShoppingCartProductsKey>,
     override var iCrudService: ICrudService<ShoppingCartModel, UUID>
-): ICrudController<ShoppingCartModel, UUID>{
+): ICrudController<ShoppingCartModel, UUID, ShoppingCartDTO>{
+
+    override fun createResource(model: ShoppingCartModel): ResponseEntity<ShoppingCartDTO> {
+        return ResponseEntity.ok(ShoppingCartDTO(iCrudService.createEntity(model)))
+    }
+
+    override fun readResource(id: UUID): ResponseEntity<ShoppingCartDTO> {
+        return ResponseEntity.ok(ShoppingCartDTO(iCrudService.getEntity(id)))
+    }
+
+    override fun readResources(): ResponseEntity<List<ShoppingCartDTO>> {
+        return ResponseEntity.ok(ShoppingCartDTO.shoppingCartsDTO(iCrudService.getEntities()))
+    }
 
     override fun updateProduct(id: UUID, model: ShoppingCartModel): ResponseEntity<UUID> {
         return ResponseEntity.ok(iCrudService.updateEntity(id, model).id)
