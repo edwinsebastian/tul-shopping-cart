@@ -1,6 +1,8 @@
 package com.tul.shoppingcart.demo.service
 
+import com.tul.shoppingcart.demo.exception.OutStockEx
 import com.tul.shoppingcart.demo.enum.ProductStatus
+import com.tul.shoppingcart.demo.exception.ResourceNotFoundEx
 import com.tul.shoppingcart.demo.model.ProductModel
 import com.tul.shoppingcart.demo.model.ShoppingCartDTO
 import com.tul.shoppingcart.demo.repository.ProductRepository
@@ -19,11 +21,15 @@ class ProductServiceImpl(
     }
 
     override fun getEntity(id: UUID): ProductModel {
-        return productRepository.findByIdAndStatusEquals(id, ProductStatus.ACTIVE).get()
+        try {
+            return productRepository.findByIdAndStatusEquals(id, ProductStatus.ACTIVE).get()
+        }catch (ex: java.util.NoSuchElementException){
+            throw ResourceNotFoundEx("Product with id:$id not found.")
+        }
     }
 
     override fun deleteEntity(id: UUID) {
-        val productModel: ProductModel = crudRepository.findById(id).get()
+        val productModel: ProductModel = getEntity(id)
         productModel.status = ProductStatus.DELETED
         crudRepository.save(productModel)
     }
@@ -37,7 +43,7 @@ class ProductServiceImpl(
         return crudRepository.save(model)
     }
 
-    fun getProductPrice(id: UUID) = crudRepository.findById(id).get().finalPrice
+    fun getProductPrice(id: UUID) = getEntity(id).finalPrice
 
     fun calculateProductsPrice(id: UUID, quantity: Int) = this.getProductPrice(id) * quantity
 
@@ -45,14 +51,15 @@ class ProductServiceImpl(
         if(quantity <= productModel.availableQuantity){
             return true
         }
-        throw Exception("Not enough stock for product: ${productModel.id}. Available: ${productModel.availableQuantity} Required: $quantity")
+        throw OutStockEx("Not enough stock for product: ${productModel.id}.")
     }
 
     fun moveStock(id: UUID, quantity: Int): ProductModel {
-        val productModel: ProductModel = crudRepository.findById(id).get()
+        val productModel: ProductModel = getEntity(id)
         this.validateStockAvailability(productModel, quantity)
         productModel.availableQuantity -= quantity
         productModel.pendingQuantity += quantity
+
         return crudRepository.save(productModel)
     }
 

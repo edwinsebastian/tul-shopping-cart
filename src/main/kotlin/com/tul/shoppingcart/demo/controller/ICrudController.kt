@@ -1,8 +1,12 @@
 package com.tul.shoppingcart.demo.controller
 
+import com.tul.shoppingcart.demo.exception.OutStockEx
+import com.tul.shoppingcart.demo.exception.ResourceNotFoundEx
 import com.tul.shoppingcart.demo.service.ICrudService
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 interface ICrudController<T, ID, R> {
     var iCrudService: ICrudService<T, ID>
@@ -26,10 +30,15 @@ interface ICrudController<T, ID, R> {
         return ResponseEntity.ok("Resource deleted")
     }
 
-    @ExceptionHandler(*[NoSuchElementException::class])
-    fun handleException(): ResponseEntity<String>{
-        return ResponseEntity.badRequest().body("Resource not found")
+    @ExceptionHandler(value = [
+        IllegalArgumentException::class,
+        MethodArgumentTypeMismatchException::class,
+        NoSuchElementException::class,
+        OutStockEx::class,
+        ResourceNotFoundEx::class,
+        EmptyResultDataAccessException::class
+    ])
+    fun handleException(ex: Exception): ResponseEntity<String>{
+        return ResponseEntity.badRequest().body("Error found, can not proceed. ${ex.message}")
     }
-
-//    todo custom exception para cantidades no disponibles
 }
