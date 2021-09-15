@@ -1,5 +1,6 @@
 package com.tul.shoppingcart.demo.model
 
+import com.tul.shoppingcart.demo.enum.ProductStatus
 import javax.persistence.Entity
 import javax.persistence.Enumerated
 import javax.persistence.EnumType
@@ -20,12 +21,7 @@ class ProductModel(
     @OneToMany(mappedBy = "productModel")
     var shoppingCartProductsModel: MutableSet<ShoppingCartProductsModel> = mutableSetOf(),
 
-): Model() {
+    ): Model() {
     val finalPrice
         get() = if (this.discount) this.price/2 else this.price
-}
-
-enum class ProductStatus(val status: String){
-    ACTIVE("ACTIVE"),
-    DELETED("DELETED")
 }

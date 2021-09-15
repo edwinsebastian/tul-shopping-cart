@@ -1,10 +1,11 @@
 package com.tul.shoppingcart.demo.repository
 
 import com.tul.shoppingcart.demo.model.ProductModel
-import com.tul.shoppingcart.demo.model.ProductStatus
+import com.tul.shoppingcart.demo.enum.ProductStatus
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
+import java.util.Optional
 
 @Repository
 interface ProductRepository: CrudRepository<ProductModel, UUID> {

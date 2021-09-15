@@ -1,5 +1,6 @@
 package com.tul.shoppingcart.demo.model
 
+import com.tul.shoppingcart.demo.enum.ShoppingCartStatus
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 import javax.persistence.Enumerated
@@ -13,8 +14,3 @@ class ShoppingCartModel(
     var status: ShoppingCartStatus = ShoppingCartStatus.PENDING,
     var totalCost: Double = 0.0
 ):Model()
-
-enum class ShoppingCartStatus(val status: String){
-    PENDING("PENDING"),
-    COMPLETED("COMPLETED")
-}
