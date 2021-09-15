@@ -1,36 +1,26 @@
 package com.tul.shoppingcart.demo.controller
 
-import com.tul.shoppingcart.demo.model.Model
 import com.tul.shoppingcart.demo.service.ICrudService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.UUID
 
-interface ICrudController<T> {
-    var iCrudService: ICrudService<T>
+interface ICrudController<T, ID, R> {
+    var iCrudService: ICrudService<T, ID>
 
     @PostMapping
-    fun createResource(@RequestBody model: T): ResponseEntity<UUID>{
-        return ResponseEntity.ok((iCrudService.createEntity(model) as Model).id)
-    }
+    fun createResource(@RequestBody model: T): ResponseEntity<R>
 
     @GetMapping("/{id}")
-    fun readResource(@PathVariable id: UUID): ResponseEntity<T> {
-        return ResponseEntity.ok(iCrudService.getEntity(id))
-    }
+    fun readResource(@PathVariable id: ID): ResponseEntity<R>
 
     @GetMapping
-    fun readResources(): ResponseEntity<List<T>> {
-        return ResponseEntity.ok(iCrudService.getEntities())
-    }
+    fun readResources(): ResponseEntity<List<R>>
 
     @PutMapping("/{id}")
-    fun updateProduct(@PathVariable id: UUID, @RequestBody model: T): ResponseEntity<UUID>{
-        return ResponseEntity.ok((iCrudService.updateEntity(id, model) as Model).id)
-    }
+    fun updateProduct(@PathVariable id: ID, @RequestBody model: T): ResponseEntity<ID>
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: UUID): ResponseEntity<String> {
+    fun deleteProduct(@PathVariable id: ID): ResponseEntity<String> {
         ResponseEntity.ok(iCrudService.deleteEntity(id))
 
         return ResponseEntity.ok("Resource deleted")
@@ -40,4 +30,6 @@ interface ICrudController<T> {
     fun handleException(): ResponseEntity<String>{
         return ResponseEntity.badRequest().body("Resource not found")
     }
+
+//    todo custom exception para cantidades no disponibles
 }
