@@ -1,11 +1,14 @@
 package com.tul.shoppingcart.demo.controller
 
+import com.tul.shoppingcart.demo.enum.EntityStatusEnum
+import com.tul.shoppingcart.demo.model.Model
+import com.tul.shoppingcart.demo.model.ResourceUpdatedDTO
 import com.tul.shoppingcart.demo.service.ICrudService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 interface ICrudController<T, ID, R> {
-    var iCrudService: ICrudService<T, ID>
+    val crudServiceImpl: ICrudService<T, ID>
 
     @PostMapping
     fun createResource(@RequestBody model: T): ResponseEntity<R>
@@ -17,19 +20,12 @@ interface ICrudController<T, ID, R> {
     fun readResources(): ResponseEntity<List<R>>
 
     @PutMapping("/{id}")
-    fun updateProduct(@PathVariable id: ID, @RequestBody model: T): ResponseEntity<ID>
+    fun updateResource(@PathVariable id: ID, @RequestBody model: T): ResponseEntity<ResourceUpdatedDTO>{
+        return ResponseEntity.ok(ResourceUpdatedDTO((crudServiceImpl.updateEntity(id, model) as Model).id, EntityStatusEnum.UPDATED))
+    }
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: ID): ResponseEntity<String> {
-        ResponseEntity.ok(iCrudService.deleteEntity(id))
-
-        return ResponseEntity.ok("Resource deleted")
+    fun deleteResource(@PathVariable id: ID): ResponseEntity<ResourceUpdatedDTO> {
+        return ResponseEntity.ok(ResourceUpdatedDTO((crudServiceImpl.deleteEntity(id) as Model).id, EntityStatusEnum.DELETED))
     }
-
-    @ExceptionHandler(*[NoSuchElementException::class])
-    fun handleException(): ResponseEntity<String>{
-        return ResponseEntity.badRequest().body("Resource not found")
-    }
-
-//    todo custom exception para cantidades no disponibles
 }

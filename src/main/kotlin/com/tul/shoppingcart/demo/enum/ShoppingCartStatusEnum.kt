@@ -1,6 +1,6 @@
 package com.tul.shoppingcart.demo.enum
 
-enum class ShoppingCartStatus(val status: String){
+enum class ShoppingCartStatusEnum(val status: String){
     PENDING("PENDING"),
     COMPLETED("COMPLETED")
 }

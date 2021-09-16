@@ -1,6 +1,6 @@
 package com.tul.shoppingcart.demo.model
 
-import com.tul.shoppingcart.demo.enum.ProductStatus
+import com.tul.shoppingcart.demo.enum.ProductStatusEnum
 import javax.persistence.Entity
 import javax.persistence.Enumerated
 import javax.persistence.EnumType
@@ -9,7 +9,7 @@ import javax.persistence.OneToMany
 @Entity
 class ProductModel(
     @Enumerated(EnumType.STRING)
-    var status: ProductStatus = ProductStatus.ACTIVE,
+    var status: ProductStatusEnum = ProductStatusEnum.ACTIVE,
     val name: String = "",
     val sku: String = "",
     val description: String = "",

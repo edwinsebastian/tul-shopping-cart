@@ -1,6 +1,6 @@
 package com.tul.shoppingcart.demo.enum
 
-enum class ProductStatus(val status: String){
+enum class ProductStatusEnum(val status: String){
     ACTIVE("ACTIVE"),
     DELETED("DELETED")
 }

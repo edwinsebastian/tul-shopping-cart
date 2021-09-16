@@ -3,7 +3,7 @@ package com.tul.shoppingcart.demo.repository
 import com.tul.shoppingcart.demo.model.ShoppingCartProductsKey
 import com.tul.shoppingcart.demo.model.ShoppingCartProductsModel
 import org.springframework.data.repository.CrudRepository
-import java.util.UUID
+import org.springframework.stereotype.Repository
 
-interface ShoppingCartProductRepository: CrudRepository<ShoppingCartProductsModel, ShoppingCartProductsKey> {
-}
+@Repository
+interface ShoppingCartProductRepository: CrudRepository<ShoppingCartProductsModel, ShoppingCartProductsKey>

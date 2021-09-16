@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface ShoppingCartRepository: CrudRepository<ShoppingCartModel, UUID> {
-}
+interface ShoppingCartRepository: CrudRepository<ShoppingCartModel, UUID>
