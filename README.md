@@ -54,6 +54,7 @@ para disminuir la cantidad y ya se habian agregado 5 y se quiere quitar 1 ```"qu
 
 ### agregar products al shopping_cart PUT /v1/shoppingcart/{shoppingCartId}/checkout
 ##### response body
+```
 {
     "shoppingCartId": "71aa620c-5fce-4050-98cb-3a8e96510414",
     "products": [
@@ -67,6 +68,7 @@ para disminuir la cantidad y ya se habian agregado 5 y se quiere quitar 1 ```"qu
     "status": "COMPLETED",
     "total": 288897.12
 }
+```
 
 
 
