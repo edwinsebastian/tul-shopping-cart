@@ -1,46 +1,44 @@
 package com.tul.shoppingcart.demo.service
 
 import com.tul.shoppingcart.demo.exception.OutStockEx
-import com.tul.shoppingcart.demo.enum.ProductStatus
-import com.tul.shoppingcart.demo.exception.ResourceNotFoundEx
+import com.tul.shoppingcart.demo.enum.ProductStatusEnum
+import com.tul.shoppingcart.demo.exception.ResourceNotFoundException
 import com.tul.shoppingcart.demo.model.ProductModel
 import com.tul.shoppingcart.demo.model.ShoppingCartDTO
 import com.tul.shoppingcart.demo.repository.ProductRepository
-import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
 import java.util.stream.Collectors
 
 @Service
 class ProductServiceImpl(
-    private var productRepository: ProductRepository,
-    override var crudRepository: CrudRepository<ProductModel, UUID>
+    override var crudRepositoryImpl: ProductRepository,
 ): ICrudService<ProductModel, UUID> {
     override fun getEntities(): List<ProductModel> {
-        return productRepository.findAllByStatusEquals(ProductStatus.ACTIVE).toList()
+        return crudRepositoryImpl.findAllByStatusEquals(ProductStatusEnum.ACTIVE).toList()
     }
 
     override fun getEntity(id: UUID): ProductModel {
         try {
-            return productRepository.findByIdAndStatusEquals(id, ProductStatus.ACTIVE).get()
+            return crudRepositoryImpl.findByIdAndStatusEquals(id, ProductStatusEnum.ACTIVE).get()
         }catch (ex: java.util.NoSuchElementException){
-            throw ResourceNotFoundEx("Product with id:$id not found.")
+            throw ResourceNotFoundException("Product with id:$id not found.")
         }
     }
 
     override fun deleteEntity(id: UUID) {
         val productModel: ProductModel = getEntity(id)
-        productModel.status = ProductStatus.DELETED
-        crudRepository.save(productModel)
+        productModel.status = ProductStatusEnum.DELETED
+        crudRepositoryImpl.save(productModel)
     }
 
     override fun updateEntity(id: UUID, model: ProductModel): ProductModel {
-        if(!crudRepository.existsById(id)){
-            throw NoSuchElementException()
+        if(!crudRepositoryImpl.existsById(id)){
+            throw ResourceNotFoundException("Product with id:$id not found.")
         }
         model.id = id
 
-        return crudRepository.save(model)
+        return crudRepositoryImpl.save(model)
     }
 
     fun getProductPrice(id: UUID) = getEntity(id).finalPrice
@@ -60,7 +58,7 @@ class ProductServiceImpl(
         productModel.availableQuantity -= quantity
         productModel.pendingQuantity += quantity
 
-        return crudRepository.save(productModel)
+        return crudRepositoryImpl.save(productModel)
     }
 
     fun moveStockPendingToCompleted(shoppingCartDTO: ShoppingCartDTO): MutableIterable<ProductModel> {
@@ -69,7 +67,7 @@ class ProductServiceImpl(
                 .map { it.productId to it.quantity }
                 .toMap()
 
-        val productModelList: List<ProductModel> = crudRepository.findAllById(
+        val productModelList: List<ProductModel> = crudRepositoryImpl.findAllById(
             shoppingCartDTO.products
                 .parallelStream()
                 .map { it.productId }
@@ -85,6 +83,6 @@ class ProductServiceImpl(
                 it.completedQuantity += quantity
             }
 
-        return crudRepository.saveAll(productModelList)
+        return crudRepositoryImpl.saveAll(productModelList)
     }
 }
