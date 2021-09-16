@@ -41,7 +41,7 @@ https://www.getpostman.com/collections/1119b16fcb52d2142127
         }
     ],
     "status": "PENDING",
-    "total": 288897.12
+    "total": 90280.35
 }
 ```
 NOTA:
@@ -66,7 +66,7 @@ para disminuir la cantidad y ya se habian agregado 5 y se quiere quitar 1 ```"qu
         }
     ],
     "status": "COMPLETED",
-    "total": 288897.12
+    "total": 90280.35
 }
 ```
 
